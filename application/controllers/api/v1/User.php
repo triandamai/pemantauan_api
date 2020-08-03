@@ -74,22 +74,58 @@ class User extends REST_Controller {
     
         }
     }
-   
+    public function register_post(){
+    
+        $jsonArray = json_decode(file_get_contents('php://input'),true);
+  
+
+        if ($jsonArray['nrp'] === NULL || $jsonArray['password'] === NULL)
+        {
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Password Atau nrp tidak terdaftar",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+    
+        }else {
+            
+       
+           
+            $data = $this->DataModel->insert('pegawai', $jsonArray);
+            if($data){
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_OK,
+                    "response_message"      => "Berhasil",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "gagal",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }
+    
+        }
+    }
     public function auth_post(){
     
         $jsonArray = json_decode(file_get_contents('php://input'),true);
         $data = array(
-            'user_name' => $jsonArray['user_name'],
-            'user_password' => md5($jsonArray['user_password'])
+            'nrp' => $jsonArray['nrp'],
+            'password' => md5($jsonArray['password'])
         );
 
-        if ($jsonArray['user_name'] === NULL || $jsonArray['user_password'] === NULL)
+        if ($jsonArray['nrp'] === NULL || $jsonArray['password'] === NULL)
         {
        
                 return $this->response(array(
                     "status"                => false,
                     "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                    "response_message"      => "Gagal Mendapatkan Data",
+                    "response_message"      => "Password Atau nrp tidak terdaftar",
                     "data"                  => null,
                 ), REST_Controller::HTTP_OK);
     
@@ -109,7 +145,7 @@ class User extends REST_Controller {
                 return $this->response(array(
                     "status"                => false,
                     "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                    "response_message"      => "Gagal Mendapatkan Data",
+                    "response_message"      => "Password Atau nrp tidak terdaftar",
                     "data"                  => null,
                 ), REST_Controller::HTTP_OK);
             }
