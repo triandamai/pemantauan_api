@@ -109,12 +109,104 @@ class User extends REST_Controller {
     
         }
     }
+    public function change_profil_post(){
+        $jsonArray = json_decode(file_get_contents('php://input'),true);
+
+        $check = $this->DataModel->getWhere('id',$jsonArray['id']);
+        $check = $this->DataModel->getData("pegawai");
+        if($check->num_rows() > 0){
+            if($jsonArray['id'] == NULL){
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Id User Tidak Ditemukan",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+            $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$jsonArray);
+            if($simpan){
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_OK,
+                    "response_message"      => "Berhasil",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Gagal Merubah ".db_error(),
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }
+        }
+        }else{
+            return $this->response(array(
+                "status"                => false,
+                "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                "response_message"      => "User Tidak Ditemukan",
+                "data"                  => null,
+            ), REST_Controller::HTTP_OK);
+        }
+    }
+    public function change_password_post(){
+        $jsonArray = json_decode(file_get_contents('php://input'),true);
+
+        $check = $this->DataModel->getWhere('id',$jsonArray['id']);
+        $check = $this->DataModel->getData("pegawai");
+        if($check->num_rows() > 0){
+            if($jsonArray['id'] == NULL){
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Id User Tidak Ditemukan",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+            $data =[
+                'password' => md5($jsonArray['password'])
+            ];
+            $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$data);
+            if($simpan){
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_OK,
+                    "response_message"      => "Berhasil",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Gagal Merubah ".db_error(),
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }
+        }
+        }else{
+            return $this->response(array(
+                "status"                => false,
+                "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                "response_message"      => "User Tidak Ditemukan",
+                "data"                  => null,
+            ), REST_Controller::HTTP_OK);
+        }
+    }
     public function change_level_post(){
     
         $jsonArray = json_decode(file_get_contents('php://input'),true);
-  
+        
+        if($jsonArray['level'] == "USER"){
+            $data = [
+                'level' => 'ADMIN'
+            ];
+        }else{
+            $data = [
+                'level' => 'USER'
+            ];
+        }
 
-        if ($jsonArray['level'] === NULL || $jsonArray['id_pegawai'] === NULL)
+        if ($jsonArray['level'] === NULL || $jsonArray['id'] === NULL)
         {
                 return $this->response(array(
                     "status"                => false,
@@ -125,7 +217,7 @@ class User extends REST_Controller {
     
         }else {
             
-            $data = $this->DataModel->update('id_pegawai',$jsonArray['id_pegawai'],'pegawai', $jsonArray);
+            $data = $this->DataModel->update('id',$jsonArray['id'],'pegawai', $data);
             if($data){
                 return $this->response(array(
                     "status"                => true,
@@ -148,8 +240,8 @@ class User extends REST_Controller {
     
         $jsonArray = json_decode(file_get_contents('php://input'),true);
         $data = array(
-            'nrp' => $jsonArray['nrp'],
-            'password' => md5($jsonArray['password'])
+            'nrp'       => $jsonArray['nrp'],
+            'password'  => md5($jsonArray['password'])
         );
 
         if ($jsonArray['nrp'] === NULL || $jsonArray['password'] === NULL)
@@ -163,9 +255,6 @@ class User extends REST_Controller {
                 ), REST_Controller::HTTP_OK);
     
         }else {
-            
-       
-           
             $data = $this->DataModel->get_whereArr('pegawai', $data);
             if($data->num_rows() >= 1){
                 return $this->response(array(
