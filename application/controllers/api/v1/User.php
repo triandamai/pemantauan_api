@@ -84,15 +84,48 @@ class User extends REST_Controller {
                 return $this->response(array(
                     "status"                => false,
                     "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                    "response_message"      => "Password Atau nrp tidak terdaftar",
+                    "response_message"      => "Password Atau nrp tidak boleh kosong",
                     "data"                  => null,
                 ), REST_Controller::HTTP_OK);
     
         }else {
             
-       
-           
             $data = $this->DataModel->insert('pegawai', $jsonArray);
+            if($data){
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_OK,
+                    "response_message"      => "Berhasil",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "gagal",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }
+    
+        }
+    }
+    public function change_level_post(){
+    
+        $jsonArray = json_decode(file_get_contents('php://input'),true);
+  
+
+        if ($jsonArray['level'] === NULL || $jsonArray['id_pegawai'] === NULL)
+        {
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Tidak boleh kosong",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+    
+        }else {
+            
+            $data = $this->DataModel->update('id_pegawai',$jsonArray['id_pegawai'],'pegawai', $jsonArray);
             if($data){
                 return $this->response(array(
                     "status"                => true,

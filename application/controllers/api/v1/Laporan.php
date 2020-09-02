@@ -84,32 +84,30 @@ class Laporan extends REST_Controller {
             $jsonArray = json_decode(file_get_contents('php://input'),true);
 
 
-                        if(!empty($jsonArray['media'])){
+            if(!empty($jsonArray['media'])){
 
                 $mediabase64  = base64_decode($jsonArray['media']);
     
-                $image_media = "LAPORAN_".date('y-m-d h:i:s'). ".jpg";
-                file_put_contents("public/laporan/" . $image_media, $mediabase64);
+                $image_media = "LAPORAN_".$this->uuid().".jpg";
+                file_put_contents("public/" . $image_media, $mediabase64);
     
                 
                 $data_input =[
-                    'id_laporan'         => $name,
-                    'id_pegawai'       => $detail,
-                    'deskripsi'  => $idcategory,
-                    'media'        => $price,
-                    'lat'        => $image_media,
-                    'lng'       => $status,
+                    'id_pegawai'       => $jsonArray['id_pegawai'],
+                    'deskripsi'  => $jsonArray['deskripsi'],
+                    'media'        => $image_media,
+                    'lat'        => $jsonArray['lat'],
+                    'lng'       => $jsonArray['lng'],
                     'created_at'   => date('y-m-d h:i:s'),
                     'updated_at'   => date('y-m-d h:i:s')
                 ];  
     
                 $data_input2 =[
-                    'id_laporan'         => $name,
-                    'id_pegawai'       => $detail,
-                    'deskripsi'  => $idcategory,
-                    'media'        => $price,
-                    'lat'        => $image_media,
-                    'lng'       => $status,
+                    'id_pegawai'       => $jsonArray['id_pegawai'],
+                    'deskripsi'  => $jsonArray['deskripsi'],
+                    'media'        => $image_media,
+                    'lat'        => $jsonArray['lat'],
+                    'lng'       => $jsonArray['lng'],
                     'updated_at'   => date('y-m-d h:i:s')
                 ];  
                 $check = $this->DataModel->getWheretbl('laporan','id_laporan',$jsonArray['id_laporan'])->num_rows();
@@ -121,14 +119,14 @@ class Laporan extends REST_Controller {
                         return $this->response(array(
                        "status"                => true,
                        "response_code"         => REST_Controller::HTTP_OK,
-                       "response_message"      => "Berhasil Merubah Lokasi",
+                       "response_message"      => "Berhasil Menambah Laporan",
                        "data"                  => null,
                         ), REST_Controller::HTTP_OK);
                     }else{
                         return $this->response(array(
                        "status"                => false,
                        "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                       "response_message"      => "Gagal Merubah Lokasi",
+                       "response_message"      => "Gagal Menambah Laporan",
                        "data"                  => null,
                         ), REST_Controller::HTTP_OK);
                     }
@@ -138,14 +136,14 @@ class Laporan extends REST_Controller {
                         return $this->response(array(
                        "status"                => true,
                        "response_code"         => REST_Controller::HTTP_OK,
-                       "response_message"      => "Berhasil Menyimpan Lokasi",
+                       "response_message"      => "Berhasil Merubah Laporan",
                        "data"                  => null,
                         ), REST_Controller::HTTP_OK);
                     }else{
                         return $this->response(array(
                        "status"                => false,
                        "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                       "response_message"      => "Gagal Menyimpan Data",
+                       "response_message"      => "Gagal Merubah Laporan",
                        "data"                  => null,
                         ), REST_Controller::HTTP_OK);
                     }
@@ -161,6 +159,27 @@ class Laporan extends REST_Controller {
             
    }
   
-
+    //TODO : generate v4 uuid
+    protected function uuid() {
+        return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            // 32 bits for "time_low"
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+    
+            // 16 bits for "time_mid"
+            mt_rand( 0, 0xffff ),
+    
+            // 16 bits for "time_hi_and_version",
+            // four most significant bits holds version number 4
+            mt_rand( 0, 0x0fff ) | 0x4000,
+    
+            // 16 bits, 8 bits for "clk_seq_hi_res",
+            // 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            mt_rand( 0, 0x3fff ) | 0x8000,
+    
+            // 48 bits for "node"
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+        );
+    }
 
 }
