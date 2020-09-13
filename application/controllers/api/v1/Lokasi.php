@@ -62,11 +62,12 @@ class Lokasi extends REST_Controller {
             if($data && $data->num_rows() >= 1){
                 foreach($data->result() as $r){
                   array_push($hasil,(object)[
-                      "id" => $id,
-                      "lat"=>$r->lat,
-                      "lng"=>$r->lng,
-                      "ket" => $r->nama_lengkap,
-                      "detail" => $r->nrp
+                      "id"     => $id,
+                      "lat"    => $r->lat,
+                      "lng"    => $r->lng,
+                      "ket"    => $r->nama_lengkap,
+                      "detail" => $r->nrp,
+                      "tipe"   => "lokasi"
                   ]);
                   $id++;
                 }
@@ -76,11 +77,12 @@ class Lokasi extends REST_Controller {
             if($datatitik && $datatitik->num_rows() >= 1){
                 foreach($datatitik->result() as $r){
                     array_push($hasil,(object)[
-                        "id"=>$id,
-                        "lat"=>$r->lat,
-                        "lng"=>$r->lng,
-                        "ket" => $r->nama,
-                        "detail" => $r->detail
+                        "id"     => $id,
+                        "lat"    => $r->lat,
+                        "lng"    => $r->lng,
+                        "ket"    => $r->nama,
+                        "detail" => $r->detail,
+                        "tipe"   => "titik"
                     ]);   
                     $id++; 
                 }
