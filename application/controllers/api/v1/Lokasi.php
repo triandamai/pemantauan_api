@@ -46,6 +46,9 @@ class Lokasi extends REST_Controller {
     }
     public function user_get()
     {
+        $hasil = array();
+        $id = 0;
+
         $id = $this->get('id');
         if ($id === NULL)
         {
@@ -54,21 +57,41 @@ class Lokasi extends REST_Controller {
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = loc.id_pegawai','INNER');
             $data = $this->DataModel->order_by("loc.id_lokasi","ASC");
             $data = $this->DataModel->getData('lokasi AS loc');
+            $datatitik = $this->DataModel->getData('titik');
+            $id=1;
             if($data && $data->num_rows() >= 1){
-                return $this->response(array(
-                    "status"                => true,
-                    "response_code"         => REST_Controller::HTTP_OK,
-                    "response_message"      => "Berhasil",
-                    "data"                  => $data->result(),
-                ), REST_Controller::HTTP_OK);
-            }else{
-                return $this->response(array(
-                    "status"                => true,
-                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                    "response_message"      => "Gagal Mendapatkan Data",
-                    "data"                  => null,
-                ), REST_Controller::HTTP_OK);
+                foreach($data->result() as $r){
+                  array_push($hasil,(object)[
+                      "id" => $id,
+                      "lat"=>$r->lat,
+                      "lng"=>$r->lng,
+                      "ket" => $r->nama_lengkap,
+                      "detail" => $r->nrp
+                  ]);
+                  $id++;
+                }
+                
+                
             }
+            if($datatitik && $datatitik->num_rows() >= 1){
+                foreach($datatitik->result() as $r){
+                    array_push($hasil,(object)[
+                        "id"=>$id,
+                        "lat"=>$r->lat,
+                        "lng"=>$r->lng,
+                        "ket" => $r->nama,
+                        "detail" => $r->detail
+                    ]);   
+                    $id++; 
+                }
+            }
+
+            return $this->response(array(
+                "status"                => true,
+                "response_code"         => REST_Controller::HTTP_OK,
+                "response_message"      => "Berhasil",
+                "data"                  => $hasil,
+            ), REST_Controller::HTTP_OK);
     
         }else {
             
