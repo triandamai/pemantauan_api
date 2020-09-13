@@ -34,7 +34,7 @@ class Laporan extends REST_Controller {
             $data = $this->DataModel->select('*');
         
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = l.id_pegawai','INNER');
-            $data = $this->DataModel->order_by("l.id_laporan","ASC");
+            $data = $this->DataModel->order_by("l.created_at","ASC");
             $data = $this->DataModel->getData('laporan AS l');
             if($data && $data->num_rows() >= 1){
                 return $this->response(array(
@@ -58,7 +58,7 @@ class Laporan extends REST_Controller {
         
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = loc.id_pegawai','INNER');
             $data = $this->db->where("loc.id ",$id);
-            $data = $this->DataModel->order_by("l.id_laporan","ASC");
+            $data = $this->DataModel->order_by("l.created_at","ASC");
             $data = $this->DataModel->getData('laporan AS l');
             if($data && $data->num_rows() >= 1){
                 return $this->response(array(
@@ -94,6 +94,7 @@ class Laporan extends REST_Controller {
                 
                 $data_input =[
                     'id_pegawai'       => $jsonArray['id_pegawai'],
+                    'kode_laporan' => $this->DataModel->get_last_id(),
                     'deskripsi'  => $jsonArray['deskripsi'],
                     'media'        => $image_media,
                     'lat'        => $jsonArray['lat'],
@@ -110,6 +111,24 @@ class Laporan extends REST_Controller {
                     'lng'       => $jsonArray['lng'],
                     'updated_at'   => date('y-m-d h:i:s')
                 ];  
+                if($jsonArray['id_laporan'] == null){
+                    $data = $this->DataModel->insert('laporan',$data_input);
+                    if($data){
+                        return $this->response(array(
+                       "status"                => true,
+                       "response_code"         => REST_Controller::HTTP_OK,
+                       "response_message"      => "Berhasil Merubah Laporan",
+                       "data"                  => null,
+                        ), REST_Controller::HTTP_OK);
+                    }else{
+                        return $this->response(array(
+                       "status"                => false,
+                       "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                       "response_message"      => "Gagal Merubah Laporan",
+                       "data"                  => null,
+                        ), REST_Controller::HTTP_OK);
+                    }
+                }else{
                 $check = $this->DataModel->getWheretbl('laporan','id_laporan',$jsonArray['id_laporan'])->num_rows();
 
                 if($check >0){
@@ -131,6 +150,7 @@ class Laporan extends REST_Controller {
                         ), REST_Controller::HTTP_OK);
                     }
                 }else{
+
                     $data = $this->DataModel->insert('laporan',$data_input);
                     if($data){
                         return $this->response(array(
@@ -147,7 +167,9 @@ class Laporan extends REST_Controller {
                        "data"                  => null,
                         ), REST_Controller::HTTP_OK);
                     }
-                } 
+                 
+                }
+            } 
             }else{
                 return $this->response(array(
                     "status"                => false,

@@ -26,6 +26,24 @@ class Lokasi extends REST_Controller {
         ), REST_Controller::HTTP_OK);
     }
   
+    public function titik_get(){
+        $data = $this->DataModel->getData('titik');
+            if($data && $data->num_rows() >= 1){
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_OK,
+                    "response_message"      => "Berhasil",
+                    "data"                  => $data->result(),
+                ), REST_Controller::HTTP_OK);
+            }else{
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Gagal Mendapatkan Data",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }
+    }
     public function user_get()
     {
         $id = $this->get('id');

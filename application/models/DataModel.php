@@ -111,5 +111,20 @@ class DataModel extends CI_Model{
     function update_batch($table,$data,$id){
         return $this->db->update_batch($table,$data,$id);
     }
+    function get_last_id(){
+        $q = $this->db->query("SELECT MAX(RIGHT(id_laporan,4)) AS kd_max FROM laporan");
+        $kd = "";
+        if($q->num_rows()>0){
+            foreach($q->result() as $k){
+                $tmp = ((int)$k->kd_max)+1;
+                $kd = sprintf("%04s", $tmp);
+            }
+        }else{
+            $kd = "0001";
+        }
+        date_default_timezone_set('Asia/Jakarta');
+        return "LAPORAN_".date('dmy').$kd;
+    
+    }
 
 }

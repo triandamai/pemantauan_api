@@ -89,8 +89,20 @@ class User extends REST_Controller {
                 ), REST_Controller::HTTP_OK);
     
         }else {
-            
-            $data = $this->DataModel->insert('pegawai', $jsonArray);
+            $data_input = [
+                "nip"              => $jsonArray['nip'],
+                "nrp"              => $jsonArray['nrp'],
+                "nama_lengkap"     => $jsonArray['nama_lengkap'],
+                "golongan_pangkat" => $jsonArray['golongan_pangkat'],
+                "tmt"              => $jsonArray['tmt'],
+                "jabatan"          => $jsonArray['jabatan'],
+                "alamat_tinggal"   => $jsonArray['alamat_tinggal'],
+                "password"         => md5($jsonArray['password']),
+                "level"            => $jsonArray['level'],
+                "no_hp"            => $jsonArray['no_hp']
+
+            ];
+            $data = $this->DataModel->insert('pegawai', $data_input);
             if($data){
                 return $this->response(array(
                     "status"                => true,
@@ -109,6 +121,57 @@ class User extends REST_Controller {
     
         }
     }
+    public function edit_user_post(){
+        $jsonArray = json_decode(file_get_contents('php://input'),true);
+
+        $check = $this->DataModel->getWhere('id',$jsonArray['id']);
+        $check = $this->DataModel->getData("pegawai");
+        if($check->num_rows() > 0){
+            if($jsonArray['id'] == NULL){
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Id User Tidak Ditemukan",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+                $data= [
+                    "nip" => $jsonArray['nip'],
+                    "nrp" => $jsonArray['nrp'],
+                    "nama_lengkap" =>$jsonArray['nama_lengkap'],
+                    "golongan_pangkat" => $jsonArray['golongan_pangkat'],
+                    "tmt" => $jsonArray['tmt'],
+                    "jabatan" => $jsonArray['jabatan'],
+                    "alamat_tinggal" => $jsonArray['alamat_tinggal'],
+                    "level" => $jsonArray['level'],
+                    "no_hp" => $jsonArray['no_hp']
+                ];
+            $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$data);
+            if($simpan){
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_OK,
+                    "response_message"      => "Berhasil",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }else{
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Gagal Merubah ".db_error(),
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }
+        }
+        }else{
+            return $this->response(array(
+                "status"                => false,
+                "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                "response_message"      => "User Tidak Ditemukan",
+                "data"                  => null,
+            ), REST_Controller::HTTP_OK);
+        }
+    }
     public function change_profil_post(){
         $jsonArray = json_decode(file_get_contents('php://input'),true);
 
@@ -123,6 +186,7 @@ class User extends REST_Controller {
                     "data"                  => null,
                 ), REST_Controller::HTTP_OK);
             }else{
+
             $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$jsonArray);
             if($simpan){
                 return $this->response(array(
@@ -275,6 +339,36 @@ class User extends REST_Controller {
         }
     }
   
+    public function delete_user_post(){
+        $id = $this->post("id");
 
-
+        if ($id == NULL || $id == ""){
+        
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "id tidak terdaftar",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+    
+        }else {
+            $data = $this->DataModel->delete("id", $id,"pegawai");
+            if($data){
+                return $this->response(array(
+                    "status"                => true,
+                    "response_code"         => REST_Controller::HTTP_OK,
+                    "response_message"      => "Berhasil",
+                    "data"                  => $data,
+                ), REST_Controller::HTTP_OK);
+            }else{
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "id tidak terdaftar",
+                    "data"                  => null,
+                ), REST_Controller::HTTP_OK);
+            }
+    
+        }
+    }
 }
