@@ -227,11 +227,22 @@ class User extends REST_Controller {
                     "data"                  => null,
                 ), REST_Controller::HTTP_OK);
             }else{
-            $get = $check->result;
+            $get = $check->row();
+           
             $data =[
-                'password' => md5($jsonArray['password'])
+                'password' => md5($jsonArray['newpassword'])
             ];
-                if($get['password'] ===  md5($jsonArray['password'])){
+            if($get->password != md5($jsonArray['password'])){
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Password lama tidak sesuai",
+                    "data"                  => null,
+                    "lama"                  => $get->password,
+                    "baru"                  => md5($jsonArray['password']),
+                ), REST_Controller::HTTP_OK);
+            }else{
+                if($get->password ===  md5($jsonArray['newpassword'])){
                     return $this->response(array(
                         "status"                => false,
                         "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
@@ -239,13 +250,13 @@ class User extends REST_Controller {
                         "data"                  => null,
                     ), REST_Controller::HTTP_OK);
                 }else{
-                    $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$data);
-                    if($simpan){
+                   $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$data);
+                   if($simpan){
                         return $this->response(array(
                             "status"                => true,
                             "response_code"         => REST_Controller::HTTP_OK,
                             "response_message"      => "Berhasil",
-                            "data"                  => null,
+                            "data"                  => $get->password,
                         ), REST_Controller::HTTP_OK);
                     }else{
                         return $this->response(array(
@@ -255,7 +266,8 @@ class User extends REST_Controller {
                             "data"                  => null,
                         ), REST_Controller::HTTP_OK);
                     }
-                }
+               }
+            }
             }
         }else{
             return $this->response(array(
