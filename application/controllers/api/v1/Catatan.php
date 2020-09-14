@@ -28,7 +28,7 @@ class Catatan extends REST_Controller {
 
     public function catatan_get(){
         $id = $this->get('id');
-        if ($id === NULL)
+        if ($id == NULL)
         {
             $data = $this->DataModel->select('*');
         

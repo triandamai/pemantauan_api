@@ -227,26 +227,36 @@ class User extends REST_Controller {
                     "data"                  => null,
                 ), REST_Controller::HTTP_OK);
             }else{
+            $get = $check->result;
             $data =[
                 'password' => md5($jsonArray['password'])
             ];
-            $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$data);
-            if($simpan){
-                return $this->response(array(
-                    "status"                => true,
-                    "response_code"         => REST_Controller::HTTP_OK,
-                    "response_message"      => "Berhasil",
-                    "data"                  => null,
-                ), REST_Controller::HTTP_OK);
-            }else{
-                return $this->response(array(
-                    "status"                => false,
-                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                    "response_message"      => "Gagal Merubah ".db_error(),
-                    "data"                  => null,
-                ), REST_Controller::HTTP_OK);
+                if($get['password'] ===  md5($jsonArray['password'])){
+                    return $this->response(array(
+                        "status"                => false,
+                        "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                        "response_message"      => "Password baru tidak boleh sama dengan password lama",
+                        "data"                  => null,
+                    ), REST_Controller::HTTP_OK);
+                }else{
+                    $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$data);
+                    if($simpan){
+                        return $this->response(array(
+                            "status"                => true,
+                            "response_code"         => REST_Controller::HTTP_OK,
+                            "response_message"      => "Berhasil",
+                            "data"                  => null,
+                        ), REST_Controller::HTTP_OK);
+                    }else{
+                        return $this->response(array(
+                            "status"                => false,
+                            "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                            "response_message"      => "Gagal Merubah ".db_error(),
+                            "data"                  => null,
+                        ), REST_Controller::HTTP_OK);
+                    }
+                }
             }
-        }
         }else{
             return $this->response(array(
                 "status"                => false,

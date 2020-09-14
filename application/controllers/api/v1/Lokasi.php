@@ -100,7 +100,7 @@ class Lokasi extends REST_Controller {
             $data = $this->DataModel->select('*');
         
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = loc.id_pegawai','INNER');
-            $data = $this->db->where("loc.id ",$id);
+            $data = $this->db->where("loc.id_lokasi",$id);
             $data = $this->DataModel->order_by("loc.id_lokasi","ASC");
             $data = $this->DataModel->getData('lokasi AS loc');
             if($data && $data->num_rows() >= 1){

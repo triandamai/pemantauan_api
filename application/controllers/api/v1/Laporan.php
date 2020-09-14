@@ -29,7 +29,7 @@ class Laporan extends REST_Controller {
     public function laporan_get()
     {
         $id = $this->get('id');
-        if ($id === NULL)
+        if ($id == NULL)
         {
             $data = $this->DataModel->select('*');
         
@@ -56,8 +56,8 @@ class Laporan extends REST_Controller {
             
             $data = $this->DataModel->select('*');
         
-            $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = loc.id_pegawai','INNER');
-            $data = $this->db->where("loc.id ",$id);
+            $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = l.id_pegawai','INNER');
+            $data = $this->db->where("l.id_pegawai ",$id);
             $data = $this->DataModel->order_by("l.created_at","ASC");
             $data = $this->DataModel->getData('laporan AS l');
             if($data && $data->num_rows() >= 1){
@@ -93,23 +93,23 @@ class Laporan extends REST_Controller {
     
                 
                 $data_input =[
-                    'id_pegawai'       => $jsonArray['id_pegawai'],
+                    'id_pegawai'   => $jsonArray['id_pegawai'],
                     'kode_laporan' => $this->DataModel->get_last_id(),
-                    'deskripsi'  => $jsonArray['deskripsi'],
+                    'deskripsi'    => $jsonArray['deskripsi'],
                     'media'        => $image_media,
-                    'lat'        => $jsonArray['lat'],
-                    'lng'       => $jsonArray['lng'],
+                    'lat'          => $jsonArray['lat'],
+                    'lng'          => $jsonArray['lng'],
                     'created_at'   => date('y-m-d h:i:s'),
                     'updated_at'   => date('y-m-d h:i:s')
                 ];  
     
                 $data_input2 =[
-                    'id_pegawai'       => $jsonArray['id_pegawai'],
+                    'id_pegawai' => $jsonArray['id_pegawai'],
                     'deskripsi'  => $jsonArray['deskripsi'],
-                    'media'        => $image_media,
+                    'media'      => $image_media,
                     'lat'        => $jsonArray['lat'],
-                    'lng'       => $jsonArray['lng'],
-                    'updated_at'   => date('y-m-d h:i:s')
+                    'lng'        => $jsonArray['lng'],
+                    'updated_at' => date('y-m-d h:i:s')
                 ];  
                 if($jsonArray['id_laporan'] == null){
                     $data = $this->DataModel->insert('laporan',$data_input);
