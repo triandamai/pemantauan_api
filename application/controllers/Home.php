@@ -32,7 +32,7 @@ class Home extends REST_Controller {
             }
             $spreadsheet = $reader->load($_FILES['upload_file']['tmp_name']);
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
-            for($i = 1; $i < 65; $i++){
+            for($i = 1; $i < count($sheetData); $i++){
                 $nip      = $sheetData[$i]["1"];
                 $nrp      = $sheetData[$i]["2"];
                 $nama     = $sheetData[$i]["3"];
@@ -61,7 +61,7 @@ class Home extends REST_Controller {
             
             return $this->response(array(
                 "status"                => false,
-                "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                "response_code"         => REST_Controller::HTTP_OK,
                 "response_message"      => "Password baru tidak boleh sama dengan password lama",
                 "data"                  => $simpan,
             ), REST_Controller::HTTP_OK);
