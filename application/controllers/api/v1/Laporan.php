@@ -34,7 +34,7 @@ class Laporan extends REST_Controller {
             $data = $this->DataModel->select('*');
         
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = l.id_pegawai','INNER');
-            $data = $this->DataModel->order_by("l.created_at","ASC");
+            $data = $this->DataModel->order_by("l.created_at","DESC");
             $data = $this->DataModel->getData('laporan AS l');
             if($data && $data->num_rows() >= 1){
                 return $this->response(array(
@@ -58,7 +58,7 @@ class Laporan extends REST_Controller {
         
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = l.id_pegawai','INNER');
             $data = $this->db->where("l.id_pegawai ",$id);
-            $data = $this->DataModel->order_by("l.created_at","ASC");
+            $data = $this->DataModel->order_by("l.created_at","DESC");
             $data = $this->DataModel->getData('laporan AS l');
             if($data && $data->num_rows() >= 1){
                 return $this->response(array(
@@ -99,8 +99,8 @@ class Laporan extends REST_Controller {
                     'media'        => $image_media,
                     'lat'          => $jsonArray['lat'],
                     'lng'          => $jsonArray['lng'],
-                    'created_at'   => date('y-m-d h:i:s'),
-                    'updated_at'   => date('y-m-d h:i:s')
+                    'created_at'   => date('y-m-d h:i:sa'),
+                    'updated_at'   => date('y-m-d h:i:sa')
                 ];  
     
                 $data_input2 =[
@@ -109,7 +109,7 @@ class Laporan extends REST_Controller {
                     'media'      => $image_media,
                     'lat'        => $jsonArray['lat'],
                     'lng'        => $jsonArray['lng'],
-                    'updated_at' => date('y-m-d h:i:s')
+                    'updated_at' => date('y-m-d h:i:sa')
                 ];  
                 if($jsonArray['id_laporan'] == null){
                     $data = $this->DataModel->insert('laporan',$data_input);

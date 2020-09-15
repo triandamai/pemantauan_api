@@ -18,6 +18,17 @@ class Home extends REST_Controller {
         parent::__construct();
     }
 
+    public function index_get(){
+        return $this->response(array(
+            "status"                => false,
+            "response_code"         => REST_Controller::HTTP_OK,
+            "response_message"      => "Password baru tidak boleh sama dengan password lama",
+            "data"                  => date("y")
+        ), REST_Controller::HTTP_OK);
+   
+
+    }
+
     public function index_post()
     {
         $hasil = array();
@@ -51,7 +62,7 @@ class Home extends REST_Controller {
                     "tmt"              => $tmt,
                     "jabatan"          => $jabatan,
                     "alamat_tinggal"   => $alamat,
-                    "password"         => $password,
+                    "password"         => md5($password),
                     "level"            => $level,
                     "no_hp"            => $hp
                 ]);

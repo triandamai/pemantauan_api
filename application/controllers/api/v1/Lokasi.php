@@ -126,7 +126,24 @@ class Lokasi extends REST_Controller {
 
             $jsonArray = json_decode(file_get_contents('php://input'),true);
 
-
+            if(date("D") == "Sat" || date("D") == "Sun"){
+                
+                return $this->response(array(
+                    "status"                => false,
+                    "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                    "response_message"      => "Hanya bisa di hari senin - jumat",
+                    "data"                  => null,
+                     ), REST_Controller::HTTP_OK);
+            }else{
+                if(date("h:i:sa") != "08:00:00am" || date("h:i:sa") != "17:00:00am"){
+                    return $this->response(array(
+                        "status"                => false,
+                        "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                        "response_message"      => "Hanya bisa di hari jam 8 - 17",
+                        "data"                  => null,
+                         ), REST_Controller::HTTP_OK);
+                }else{
+                    
             $check = $this->DataModel->getWheretbl('lokasi','id_pegawai',$jsonArray['id_pegawai'])->num_rows();
         
             if($check >0){
@@ -164,9 +181,9 @@ class Lokasi extends REST_Controller {
                     ), REST_Controller::HTTP_OK);
                 }
             }
-            
-      
-   }
+        }
+        }
+    }
   
 
 
