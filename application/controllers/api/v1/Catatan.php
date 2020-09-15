@@ -33,7 +33,7 @@ class Catatan extends REST_Controller {
             $data = $this->DataModel->select('*');
         
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = c.id_pegawai','INNER');
-            $data = $this->DataModel->order_by("c.tanggal","ASC");
+            $data = $this->DataModel->order_by("c.tanggal","DESC");
             $data = $this->DataModel->getData('catatan AS c');
             if($data && $data->num_rows() >= 1){
                 return $this->response(array(
@@ -57,7 +57,7 @@ class Catatan extends REST_Controller {
         
             $data = $this->DataModel->getJoin('pegawai as pegawai','pegawai.id = c.id_pegawai','INNER');
             $data = $this->db->where("c.id_pegawai ",$id);
-            $data = $this->DataModel->order_by("c.tanggal","ASC");
+            $data = $this->DataModel->order_by("c.tanggal","DESC");
             $data = $this->DataModel->getData('catatan AS c');
             if($data && $data->num_rows() >= 1){
                 return $this->response(array(

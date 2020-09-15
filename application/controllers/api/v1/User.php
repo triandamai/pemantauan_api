@@ -32,7 +32,7 @@ class User extends REST_Controller {
         if ($id === NULL)
         {
             $data = $this->DataModel->select('*');
-            $data = $this->DataModel->order_by("id","ASC");
+            $data = $this->DataModel->order_by("id","ASCs");
             $data = $this->DataModel->getData('pegawai');
             if($data && $data->num_rows() >= 1){
                 return $this->response(array(
