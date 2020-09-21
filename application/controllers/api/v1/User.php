@@ -136,15 +136,15 @@ class User extends REST_Controller {
                 ), REST_Controller::HTTP_OK);
             }else{
                 $data= [
-                    "nip" => $jsonArray['nip'],
-                    "nrp" => $jsonArray['nrp'],
-                    "nama_lengkap" =>$jsonArray['nama_lengkap'],
+                    "nip"              => $jsonArray['nip'],
+                    "nrp"              => $jsonArray['nrp'],
+                    "nama_lengkap"     => $jsonArray['nama_lengkap'],
                     "golongan_pangkat" => $jsonArray['golongan_pangkat'],
-                    "tmt" => $jsonArray['tmt'],
-                    "jabatan" => $jsonArray['jabatan'],
-                    "alamat_tinggal" => $jsonArray['alamat_tinggal'],
-                    "level" => $jsonArray['level'],
-                    "no_hp" => $jsonArray['no_hp']
+                    "tmt"              => $jsonArray['tmt'],
+                    "jabatan"          => $jsonArray['jabatan'],
+                    "alamat_tinggal"   => $jsonArray['alamat_tinggal'],
+                    "level"            => $jsonArray['level'],
+                    "no_hp"            => $jsonArray['no_hp']
                 ];
             $simpan = $this->DataModel->update('id',$jsonArray['id'],'pegawai',$data);
             if($simpan){

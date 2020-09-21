@@ -85,7 +85,7 @@ class Catatan extends REST_Controller {
             "id_pegawai" => $jsonArray['id_pegawai'],
             "judul"      => $jsonArray['judul'],
             "isi"        => $jsonArray['isi'],
-            "tanggal"    => date('y-m-d h:i:s')
+            "tanggal"    => date('y-m-d H:i:s')
         ];
         if($jsonArray['id_catatan'] == null){
             $data = $this->DataModel->insert('catatan',$data_input);

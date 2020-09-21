@@ -135,53 +135,52 @@ class Lokasi extends REST_Controller {
                     "data"                  => null,
                      ), REST_Controller::HTTP_OK);
             }else{
-                if(date("h:i:sa") != "08:00:00am" || date("h:i:sa") != "17:00:00am"){
+                if(date("H") < "17" || date("H") > "08"){
+                    $check = $this->DataModel->getWheretbl('lokasi','id_pegawai',$jsonArray['id_pegawai'])->num_rows();
+        
+                    if($check >0){
+                        $data = $this->DataModel->update("id_pegawai",$jsonArray['id_pegawai'],'lokasi',$jsonArray);
+                        if($data){
+                            return $this->response(array(
+                           "status"                => true,
+                           "response_code"         => REST_Controller::HTTP_OK,
+                           "response_message"      => "Berhasil Merubah Lokasi",
+                           "data"                  => null,
+                            ), REST_Controller::HTTP_OK);
+                        }else{
+                            return $this->response(array(
+                           "status"                => false,
+                           "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                           "response_message"      => "Gagal Merubah Lokasi",
+                           "data"                  => null,
+                            ), REST_Controller::HTTP_OK);
+                        }
+                    }else{
+                        $data = $this->DataModel->insert('lokasi',$jsonArray);
+                        if($data){
+                            return $this->response(array(
+                           "status"                => true,
+                           "response_code"         => REST_Controller::HTTP_OK,
+                           "response_message"      => "Berhasil Menyimpan Lokasi",
+                           "data"                  => null,
+                            ), REST_Controller::HTTP_OK);
+                        }else{
+                            return $this->response(array(
+                           "status"                => false,
+                           "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                           "response_message"      => "Gagal Menyimpan Data",
+                           "data"                  => null,
+                            ), REST_Controller::HTTP_OK);
+                        }
+                    }
+                }else{
                     return $this->response(array(
                         "status"                => false,
                         "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
                         "response_message"      => "Hanya bisa di hari jam 8 - 17",
                         "data"                  => null,
                          ), REST_Controller::HTTP_OK);
-                }else{
-                    
-            $check = $this->DataModel->getWheretbl('lokasi','id_pegawai',$jsonArray['id_pegawai'])->num_rows();
-        
-            if($check >0){
-                $data = $this->DataModel->update("id_pegawai",$jsonArray['id_pegawai'],'lokasi',$jsonArray);
-                if($data){
-                    return $this->response(array(
-                   "status"                => true,
-                   "response_code"         => REST_Controller::HTTP_OK,
-                   "response_message"      => "Berhasil Merubah Lokasi",
-                   "data"                  => null,
-                    ), REST_Controller::HTTP_OK);
-                }else{
-                    return $this->response(array(
-                   "status"                => false,
-                   "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                   "response_message"      => "Gagal Merubah Lokasi",
-                   "data"                  => null,
-                    ), REST_Controller::HTTP_OK);
                 }
-            }else{
-                $data = $this->DataModel->insert('lokasi',$jsonArray);
-                if($data){
-                    return $this->response(array(
-                   "status"                => true,
-                   "response_code"         => REST_Controller::HTTP_OK,
-                   "response_message"      => "Berhasil Menyimpan Lokasi",
-                   "data"                  => null,
-                    ), REST_Controller::HTTP_OK);
-                }else{
-                    return $this->response(array(
-                   "status"                => false,
-                   "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
-                   "response_message"      => "Gagal Menyimpan Data",
-                   "data"                  => null,
-                    ), REST_Controller::HTTP_OK);
-                }
-            }
-        }
         }
     }
   

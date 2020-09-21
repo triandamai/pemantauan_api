@@ -19,12 +19,13 @@ class Home extends REST_Controller {
     }
 
     public function index_get(){
-        return $this->response(array(
-            "status"                => false,
-            "response_code"         => REST_Controller::HTTP_OK,
-            "response_message"      => "Password baru tidak boleh sama dengan password lama",
-            "data"                  => date("y")
-        ), REST_Controller::HTTP_OK);
+   //     if(date("h:i:sa") != "08:00:00am" || date("h:i:sa") != "17:00:00am"){
+            return $this->response(array(
+                "status"                => false,
+                "response_code"         => REST_Controller::HTTP_EXPECTATION_FAILED,
+                "response_message"      => "Hanya bisa di hari jam ".date("H")." - ".date("D"),
+                "data"                  => date("h") < "03" || date("h") > "08" ,
+                 ), REST_Controller::HTTP_OK);
    
 
     }
@@ -54,18 +55,22 @@ class Home extends REST_Controller {
                 $password = $sheetData[$i]["8"];
                 $level    = $sheetData[$i]["9"];
                 $hp       = $sheetData[$i]["10"];
-                array_push($hasil,(object)[
-                    "nip"              => $nip,
-                    "nrp"              => $nrp,
-                    "nama_lengkap"     => $nama,
-                    "golongan_pangkat" => $golongan,
-                    "tmt"              => $tmt,
-                    "jabatan"          => $jabatan,
-                    "alamat_tinggal"   => $alamat,
-                    "password"         => md5($password),
-                    "level"            => $level,
-                    "no_hp"            => $hp
-                ]);
+                if($nip == "" || $nip == NULL){
+
+                }else{
+                    array_push($hasil,(object)[
+                        "nip"              => $nip,
+                        "nrp"              => $nrp,
+                        "nama_lengkap"     => $nama,
+                        "golongan_pangkat" => $golongan,
+                        "tmt"              => $tmt,
+                        "jabatan"          => $jabatan,
+                        "alamat_tinggal"   => $alamat,
+                        "password"         => md5($password),
+                        "level"            => $level,
+                        "no_hp"            => $hp
+                    ]);
+                }
 
             }
             $simpan = $this->DataModel->save_batch("pegawai",$hasil);

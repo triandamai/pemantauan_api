@@ -99,8 +99,8 @@ class Laporan extends REST_Controller {
                     'media'        => $image_media,
                     'lat'          => $jsonArray['lat'],
                     'lng'          => $jsonArray['lng'],
-                    'created_at'   => date('y-m-d h:i:sa'),
-                    'updated_at'   => date('y-m-d h:i:sa')
+                    'created_at'   => date('y-m-d H:i:sa'),
+                    'updated_at'   => date('y-m-d H:i:sa')
                 ];  
     
                 $data_input2 =[
@@ -109,7 +109,7 @@ class Laporan extends REST_Controller {
                     'media'      => $image_media,
                     'lat'        => $jsonArray['lat'],
                     'lng'        => $jsonArray['lng'],
-                    'updated_at' => date('y-m-d h:i:sa')
+                    'updated_at' => date('y-m-d H:i:sa')
                 ];  
                 if($jsonArray['id_laporan'] == null){
                     $data = $this->DataModel->insert('laporan',$data_input);
